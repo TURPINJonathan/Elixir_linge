@@ -4,3 +4,9 @@ gesdinet_jwt_refresh_token:
   firewall: refresh
   user_provider: app_user_provider
   single_use: true
+  cookie:
+    enabled: true
+    http_only: true
+    secure: false # true en prod HTTPS
+    same_site: lax
+    path: /
