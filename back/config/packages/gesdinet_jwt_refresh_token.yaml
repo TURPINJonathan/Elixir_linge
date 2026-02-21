@@ -1,0 +1,6 @@
+gesdinet_jwt_refresh_token:
+  refresh_token_class: App\Entity\RefreshToken
+  ttl: 2592000
+  firewall: refresh
+  user_provider: app_user_provider
+  single_use: true

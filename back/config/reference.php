@@ -629,7 +629,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         }>,
  *     },
  *     rate_limiter?: bool|array{ // Rate limiter configuration
- *         enabled?: bool|Param, // Default: false
+ *         enabled?: bool|Param, // Default: true
  *         limiters?: array<string, array{ // Default: []
  *             lock_factory?: scalar|Param|null, // The service ID of the lock factory used by this limiter (or null to disable locking). // Default: "auto"
  *             cache_pool?: scalar|Param|null, // The cache pool to use for storing the current limiter state. // Default: "cache.rate_limiter"
@@ -1354,6 +1354,12 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *             always_remember_me?: bool|Param, // Default: false
  *             remember_me_parameter?: scalar|Param|null, // Default: "_remember_me"
  *         },
+ *         refresh_jwt?: array{
+ *             check_path?: scalar|Param|null, // Default: null
+ *             provider?: scalar|Param|null,
+ *             success_handler?: scalar|Param|null,
+ *             failure_handler?: scalar|Param|null,
+ *         },
  *     }>,
  *     access_control?: list<array{ // Default: []
  *         request_matcher?: scalar|Param|null, // Default: null
@@ -1898,6 +1904,35 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     },
  *     controllers_json?: scalar|Param|null, // Deprecated: The "twig_component.controllers_json" config option is deprecated, and will be removed in 3.0. // Default: null
  * }
+ * @psalm-type GesdinetJwtRefreshTokenConfig = array{
+ *     ttl?: int|Param, // The default TTL for all authenticators. // Default: 2592000
+ *     ttl_update?: bool|Param, // The default update TTL flag for all authenticators. // Default: false
+ *     firewall?: scalar|Param|null, // Deprecated: The "firewall" node is deprecated without replacement. // Default: "api"
+ *     user_provider?: scalar|Param|null, // Deprecated: The "user_provider" node is deprecated without replacement. // Default: null
+ *     user_identity_field?: scalar|Param|null, // Deprecated: The "user_identity_field" node is deprecated without replacement. // Default: "username"
+ *     manager_type?: scalar|Param|null, // Set the type of object manager to use (default: orm) // Default: "orm"
+ *     refresh_token_class?: scalar|Param|null, // Set the refresh token class to use (default: Gesdinet\JWTRefreshTokenBundle\Entity\RefreshToken) // Default: null
+ *     object_manager?: scalar|Param|null, // Set the object manager to use (default: doctrine.orm.entity_manager) // Default: null
+ *     user_checker?: scalar|Param|null, // Deprecated: The "user_checker" node is deprecated without replacement. // Default: "security.user_checker"
+ *     refresh_token_entity?: scalar|Param|null, // Deprecated: The "refresh_token_entity" node is deprecated, use the "refresh_token_class" node instead. // Set the refresh token class to use (default: Gesdinet\JWTRefreshTokenBundle\Entity\RefreshToken) // Default: null
+ *     entity_manager?: scalar|Param|null, // Deprecated: The "entity_manager" node is deprecated, use the "object_manager" node instead. // Set the entity manager to use // Default: null
+ *     single_use?: scalar|Param|null, // When true, generate a new refresh token on consumption (deleting the old one) // Default: false
+ *     token_parameter_name?: scalar|Param|null, // The default request parameter name containing the refresh token for all authenticators. // Default: "refresh_token"
+ *     doctrine_mappings?: bool|Param, // Deprecated: The "doctrine_mappings" node is deprecated without replacement. // When true, resolving of Doctrine mapping is done automatically to use either ORM or ODM object manager // Default: true
+ *     cookie?: bool|array{
+ *         enabled?: bool|Param, // Default: false
+ *         same_site?: "none"|"lax"|"strict"|Param, // Default: "lax"
+ *         path?: scalar|Param|null, // Default: "/"
+ *         domain?: scalar|Param|null, // Default: null
+ *         http_only?: scalar|Param|null, // Default: true
+ *         secure?: scalar|Param|null, // Default: true
+ *         partitioned?: scalar|Param|null, // Default: false
+ *         remove_token_from_body?: scalar|Param|null, // Default: true
+ *     },
+ *     logout_firewall?: scalar|Param|null, // Name of the firewall that triggers the logout event to hook into (default: api) // Default: "api"
+ *     return_expiration?: scalar|Param|null, // When true, the response will include the token expiration timestamp // Default: false
+ *     return_expiration_parameter_name?: scalar|Param|null, // The default response parameter name containing the refresh token expiration timestamp // Default: "refresh_token_expiration"
+ * }
  * @psalm-type ConfigType = array{
  *     imports?: ImportsConfig,
  *     parameters?: ParametersConfig,
@@ -1915,6 +1950,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     api_platform?: ApiPlatformConfig,
  *     lexik_jwt_authentication?: LexikJwtAuthenticationConfig,
  *     twig_component?: TwigComponentConfig,
+ *     gesdinet_jwt_refresh_token?: GesdinetJwtRefreshTokenConfig,
  *     "when@dev"?: array{
  *         imports?: ImportsConfig,
  *         parameters?: ParametersConfig,
@@ -1935,6 +1971,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         api_platform?: ApiPlatformConfig,
  *         lexik_jwt_authentication?: LexikJwtAuthenticationConfig,
  *         twig_component?: TwigComponentConfig,
+ *         gesdinet_jwt_refresh_token?: GesdinetJwtRefreshTokenConfig,
  *     },
  *     "when@prod"?: array{
  *         imports?: ImportsConfig,
@@ -1953,6 +1990,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         api_platform?: ApiPlatformConfig,
  *         lexik_jwt_authentication?: LexikJwtAuthenticationConfig,
  *         twig_component?: TwigComponentConfig,
+ *         gesdinet_jwt_refresh_token?: GesdinetJwtRefreshTokenConfig,
  *     },
  *     "when@test"?: array{
  *         imports?: ImportsConfig,
@@ -1972,6 +2010,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         api_platform?: ApiPlatformConfig,
  *         lexik_jwt_authentication?: LexikJwtAuthenticationConfig,
  *         twig_component?: TwigComponentConfig,
+ *         gesdinet_jwt_refresh_token?: GesdinetJwtRefreshTokenConfig,
  *     },
  *     ...<string, ExtensionType|array{ // extra keys must follow the when@%env% pattern or match an extension alias
  *         imports?: ImportsConfig,
