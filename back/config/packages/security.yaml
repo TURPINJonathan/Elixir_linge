@@ -21,7 +21,8 @@ security:
         check_path: /api/login
         username_path: email
         password_path: password
-        success_handler: App\Security\LoginSuccessHandler
+        # success_handler: App\Security\LoginSuccessHandler
+        success_handler: lexik_jwt_authentication.handler.authentication_success
         failure_handler: lexik_jwt_authentication.handler.authentication_failure
       login_throttling:
         max_attempts: 5
@@ -59,6 +60,7 @@ security:
   access_control:
     - { path: ^/api/login, roles: PUBLIC_ACCESS }
     - { path: ^/api/token/refresh, roles: PUBLIC_ACCESS }
+    - { path: ^/api/logout, roles: PUBLIC_ACCESS }
 
     # Tout le reste de l'API = auth obligatoire
     - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }

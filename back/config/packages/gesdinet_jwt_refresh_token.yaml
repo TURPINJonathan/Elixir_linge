@@ -12,5 +12,5 @@ gesdinet_jwt_refresh_token:
     http_only: true
     secure: false        # dev en http => false ; prod https => true
     same_site: lax       # dev => lax ; prod cross-site => none (voir plus bas)
-    path: /api/token/refresh
+    path: /
     domain: null
