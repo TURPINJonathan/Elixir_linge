@@ -45,7 +45,7 @@ class CreateSuperAdminCommand extends Command
         $firstname = (string) $input->getArgument('firstname');
         $lastname = (string) $input->getArgument('lastname');
 
-        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        if (!filter_var($email, \FILTER_VALIDATE_EMAIL)) {
             $io->error('Email invalide.');
 
             return Command::INVALID;
@@ -57,8 +57,8 @@ class CreateSuperAdminCommand extends Command
             return Command::INVALID;
         }
 
-        if ($this->userRepository->findOneBy(['email' => $email]) !== null) {
-            $io->error(sprintf('Un utilisateur existe déjà avec l\'email "%s".', $email));
+        if (null !== $this->userRepository->findOneBy(['email' => $email])) {
+            $io->error(\sprintf('Un utilisateur existe déjà avec l\'email "%s".', $email));
 
             return Command::FAILURE;
         }
@@ -74,7 +74,7 @@ class CreateSuperAdminCommand extends Command
         $this->entityManager->persist($user);
         $this->entityManager->flush();
 
-        $io->success(sprintf('Super admin créé: %s', $email));
+        $io->success(\sprintf('Super admin créé: %s', $email));
 
         return Command::SUCCESS;
     }

@@ -10,15 +10,13 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class UserCrudController extends AbstractCrudController
 {
-    public function __construct(private UserPasswordHasherInterface $passwordHasher)
-    {
-    }
+    public function __construct(private UserPasswordHasherInterface $passwordHasher) {}
 
     public static function getEntityFqcn(): string
     {
@@ -41,10 +39,11 @@ class UserCrudController extends AbstractCrudController
         yield EmailField::new('email');
 
         yield TextField::new('firstname', 'Prénom');
+
         yield TextField::new('lastname', 'Nom');
 
         $choices = [
-            'User' => 'ROLE_USER',
+            'User'  => 'ROLE_USER',
             'Admin' => 'ROLE_ADMIN',
         ];
 
@@ -62,7 +61,7 @@ class UserCrudController extends AbstractCrudController
         yield TextField::new('plainPassword', 'Mot de passe')
             ->setFormType(PasswordType::class)
             ->onlyOnForms()
-            ->setRequired($pageName === Crud::PAGE_NEW);
+            ->setRequired(Crud::PAGE_NEW === $pageName);
     }
 
     public function persistEntity(EntityManagerInterface $entityManager, $entityInstance): void
@@ -71,7 +70,7 @@ class UserCrudController extends AbstractCrudController
             $this->assertCanManageUser($entityInstance);
 
             // created_at NOT NULL
-            if ($entityInstance->getCreatedAt() === null) {
+            if (null === $entityInstance->getCreatedAt()) {
                 $entityInstance->setCreatedAt(new \DateTimeImmutable());
             }
 
@@ -90,7 +89,7 @@ class UserCrudController extends AbstractCrudController
             // En édition: on ne change le password que si l’admin a saisi un nouveau mot de passe
             if ($entityInstance->getPlainPassword()) {
                 $entityInstance->setPassword(
-                    $this->passwordHasher->hashPassword($entityInstance, $entityInstance->getPlainPassword())
+                    $this->passwordHasher->hashPassword($entityInstance, $entityInstance->getPlainPassword()),
                 );
                 $entityInstance->setPlainPassword(null);
             }
@@ -118,19 +117,19 @@ class UserCrudController extends AbstractCrudController
             throw new AccessDeniedException('Vous n\'avez pas les droits pour créer/modifier des utilisateurs.');
         }
 
-        $roles = array_values(array_filter(array_unique($user->getRoles()), static fn (string $role): bool => in_array($role, [
+        $roles = array_values(array_filter(array_unique($user->getRoles()), static fn (string $role): bool => \in_array($role, [
             'ROLE_USER',
             'ROLE_ADMIN',
             'ROLE_SUPER_ADMIN',
         ], true)));
 
-        if (in_array('ROLE_SUPER_ADMIN', $roles, true) && !$this->isGranted('ROLE_SUPER_ADMIN')) {
+        if (\in_array('ROLE_SUPER_ADMIN', $roles, true) && !$this->isGranted('ROLE_SUPER_ADMIN')) {
             throw new AccessDeniedException('Seul un super admin peut attribuer ROLE_SUPER_ADMIN.');
         }
 
         if (!$this->isGranted('ROLE_SUPER_ADMIN')) {
             foreach ($roles as $role) {
-                if (!in_array($role, ['ROLE_USER', 'ROLE_ADMIN'], true)) {
+                if (!\in_array($role, ['ROLE_USER', 'ROLE_ADMIN'], true)) {
                     throw new AccessDeniedException('Un admin ne peut attribuer que ROLE_ADMIN ou ROLE_USER.');
                 }
             }

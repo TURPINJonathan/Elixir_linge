@@ -6,9 +6,11 @@ use App\Entity\User;
 use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminDashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
+use EasyCorp\Bundle\EasyAdminBundle\Config\UserMenu;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 #[AdminDashboard(routePath: '/backoffice', routeName: 'back_office')]
 class DashboardController extends AbstractDashboardController
@@ -21,41 +23,40 @@ class DashboardController extends AbstractDashboardController
     }
 
     public function persistEntity($entityInstance): void
-{
-    if ($entityInstance instanceof User) {
-        $this->hashPasswordIfProvided($entityInstance);
-        if ($entityInstance->getCreatedAt() === null) {
-            $entityInstance->setCreatedAt(new \DateTimeImmutable());
+    {
+        if ($entityInstance instanceof User) {
+            $this->hashPasswordIfProvided($entityInstance);
+            if (null === $entityInstance->getCreatedAt()) {
+                $entityInstance->setCreatedAt(new \DateTimeImmutable());
+            }
         }
+
+        parent::persistEntity($entityInstance);
     }
 
-    parent::persistEntity($entityInstance);
-}
+    public function updateEntity($entityInstance): void
+    {
+        if ($entityInstance instanceof User) {
+            $this->hashPasswordIfProvided($entityInstance);
+        }
 
-public function updateEntity($entityInstance): void
-{
-    if ($entityInstance instanceof User) {
-        $this->hashPasswordIfProvided($entityInstance);
+        parent::updateEntity($entityInstance);
     }
 
-    parent::updateEntity($entityInstance);
-}
+    private function hashPasswordIfProvided(User $user): void
+    {
+        $plain = $user->getPlainPassword();
+        if (!$plain) {
+            return;
+        }
 
-private function hashPasswordIfProvided(User $user): void
-{
-    $plain = $user->getPlainPassword();
-    if (!$plain) {
-        return;
+        $user->setPassword($this->passwordHasher->hashPassword($user, $plain));
+        $user->setPlainPassword(null); // on efface pour éviter de le garder en mémoire
     }
-
-    $user->setPassword($this->passwordHasher->hashPassword($user, $plain));
-    $user->setPlainPassword(null); // on efface pour éviter de le garder en mémoire
-}
 
     public function index(): Response
     {
         return $this->render('admin/dashboard.html.twig');
-
         // Option 1. You can make your dashboard redirect to some common page of your backend
         //
         // 1.1) If you have enabled the "pretty URLs" feature:
@@ -84,6 +85,24 @@ private function hashPasswordIfProvided(User $user): void
     public function configureMenuItems(): iterable
     {
         yield MenuItem::linkToDashboard('Tableau de bord', 'fa fa-home');
+
+        yield MenuItem::section();
+
+        yield MenuItem::linkToCrud('Entreprises', 'fa fa-building', User::class);
+
+        yield MenuItem::linkToCrud('Clients', 'fa fa-user-tie', User::class);
+
+        yield MenuItem::section();
+
         yield MenuItem::linkToCrud('Utilisateurs', 'fa fa-user', User::class);
+    }
+
+    public function configureUserMenu(UserInterface $user): UserMenu
+    {
+        // Usually it's better to call the parent method because that gives you a
+        // user menu with some menu items already created ("sign out", "exit impersonation", etc.)
+        // if you prefer to create the user menu from scratch, use: return UserMenu::new()->...
+        return parent::configureUserMenu($user)
+            ->displayUserAvatar(false);
     }
 }

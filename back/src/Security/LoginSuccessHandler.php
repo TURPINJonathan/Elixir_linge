@@ -36,7 +36,7 @@ class LoginSuccessHandler implements AuthenticationSuccessHandlerInterface
         $this->refreshTokenManager->save($refreshToken);
 
         return new JsonResponse([
-            'token' => $jwt,
+            'token'         => $jwt,
             'refresh_token' => $refreshToken->getRefreshToken(),
         ]);
     }

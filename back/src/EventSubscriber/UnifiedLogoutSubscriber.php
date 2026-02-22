@@ -13,8 +13,7 @@ final class UnifiedLogoutSubscriber implements EventSubscriberInterface
 {
     public function __construct(
         private readonly RefreshTokenManagerInterface $refreshTokenManager,
-    ) {
-    }
+    ) {}
 
     public static function getSubscribedEvents(): array
     {
@@ -30,10 +29,10 @@ final class UnifiedLogoutSubscriber implements EventSubscriberInterface
         $token = $request->cookies->get('refresh_token');
         if (!$token) {
             $data = json_decode($request->getContent() ?: '', true);
-            $token = is_array($data) ? ($data['refresh_token'] ?? null) : null;
+            $token = \is_array($data) ? ($data['refresh_token'] ?? null) : null;
         }
 
-        if (is_string($token) && $token !== '') {
+        if (\is_string($token) && '' !== $token) {
             $refreshToken = $this->refreshTokenManager->get($token);
             if ($refreshToken) {
                 $this->refreshTokenManager->delete($refreshToken);
@@ -52,7 +51,7 @@ final class UnifiedLogoutSubscriber implements EventSubscriberInterface
                 ->withPath('/')
                 ->withHttpOnly(true)
                 ->withSecure(false)
-                ->withSameSite(Cookie::SAMESITE_LAX)
+                ->withSameSite(Cookie::SAMESITE_LAX),
         );
 
         $response->headers->setCookie(
@@ -62,7 +61,7 @@ final class UnifiedLogoutSubscriber implements EventSubscriberInterface
                 ->withPath('/')
                 ->withHttpOnly(true)
                 ->withSecure(true)
-                ->withSameSite(Cookie::SAMESITE_LAX)
+                ->withSameSite(Cookie::SAMESITE_LAX),
         );
 
         $event->setResponse($response);
