@@ -9,51 +9,11 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
 use EasyCorp\Bundle\EasyAdminBundle\Config\UserMenu;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 #[AdminDashboard(routePath: '/backoffice', routeName: 'back_office')]
 class DashboardController extends AbstractDashboardController
 {
-    private UserPasswordHasherInterface $passwordHasher;
-
-    public function __construct(UserPasswordHasherInterface $passwordHasher)
-    {
-        $this->passwordHasher = $passwordHasher;
-    }
-
-    public function persistEntity($entityInstance): void
-    {
-        if ($entityInstance instanceof User) {
-            $this->hashPasswordIfProvided($entityInstance);
-            if (null === $entityInstance->getCreatedAt()) {
-                $entityInstance->setCreatedAt(new \DateTimeImmutable());
-            }
-        }
-
-        parent::persistEntity($entityInstance);
-    }
-
-    public function updateEntity($entityInstance): void
-    {
-        if ($entityInstance instanceof User) {
-            $this->hashPasswordIfProvided($entityInstance);
-        }
-
-        parent::updateEntity($entityInstance);
-    }
-
-    private function hashPasswordIfProvided(User $user): void
-    {
-        $plain = $user->getPlainPassword();
-        if (!$plain) {
-            return;
-        }
-
-        $user->setPassword($this->passwordHasher->hashPassword($user, $plain));
-        $user->setPlainPassword(null); // on efface pour éviter de le garder en mémoire
-    }
-
     public function index(): Response
     {
         return $this->render('admin/dashboard.html.twig');
