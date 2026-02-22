@@ -7,7 +7,9 @@ use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
@@ -28,20 +30,52 @@ class UserCrudController extends AbstractCrudController
         return $crud
             ->setEntityLabelInSingular('Utilisateur')
             ->setEntityLabelInPlural('Utilisateurs')
+            ->setPageTitle(Crud::PAGE_INDEX, 'Utilisateurs')
             ->setSearchFields(['email', 'firstname', 'lastname'])
             ->setDefaultSort(['id' => 'DESC']);
     }
 
     public function configureFields(string $pageName): iterable
     {
-        yield IdField::new('id')->hideOnDetail()->hideOnForm()->hideOnIndex();
+        if (Crud::PAGE_INDEX === $pageName) {
+            return [
+                IdField::new('id')->hideOnForm()->hideOnIndex()->hideOnDetail(),
+                EmailField::new('email', 'Email'),
+                TextField::new('lastname', 'Nom'),
+                TextField::new('firstname', 'Prénom'),
+                ChoiceField::new('roles', 'Rôles')
+                    ->setChoices([
+                        'User'        => 'ROLE_USER',
+                        'Admin'       => 'ROLE_ADMIN',
+                        'Super Admin' => 'ROLE_SUPER_ADMIN',
+                    ])
+                    ->allowMultipleChoices(),
+            ];
+        }
 
-        yield EmailField::new('email');
+        if (Crud::PAGE_DETAIL === $pageName) {
+            return [
+                FormField::addPanel('Informations personnelles')->setIcon('fa fa-user'),
+                EmailField::new('email', 'Email')->setColumns(12),
+                TextField::new('firstname', 'Prénom')->setColumns(6),
+                TextField::new('lastname', 'Nom')->setColumns(6),
 
-        yield TextField::new('firstname', 'Prénom');
+                FormField::addPanel('Sécurité')->setIcon('fa fa-shield'),
+                ChoiceField::new('roles', 'Rôles')
+                    ->setChoices([
+                        'User'        => 'ROLE_USER',
+                        'Admin'       => 'ROLE_ADMIN',
+                        'Super Admin' => 'ROLE_SUPER_ADMIN',
+                    ])
+                    ->allowMultipleChoices()
+                    ->setColumns(12),
 
-        yield TextField::new('lastname', 'Nom');
+                FormField::addPanel('Métadonnées')->setIcon('fa fa-clock'),
+                DateTimeField::new('createdAt', 'Créé le')->setColumns(12),
+            ];
+        }
 
+        // PAGE_EDIT / PAGE_NEW
         $choices = [
             'User'  => 'ROLE_USER',
             'Admin' => 'ROLE_ADMIN',
@@ -51,17 +85,35 @@ class UserCrudController extends AbstractCrudController
             $choices['Super Admin'] = 'ROLE_SUPER_ADMIN';
         }
 
-        yield ChoiceField::new('roles')
-            ->setChoices($choices)
-            ->allowMultipleChoices();
+        return [
+            IdField::new('id')->hideOnForm()->hideOnIndex()->hideOnDetail(),
 
-        // Mot de passe :
-        // - obligatoire en création
-        // - optionnel en édition (si vide => ne change pas le password)
-        yield TextField::new('plainPassword', 'Mot de passe')
-            ->setFormType(PasswordType::class)
-            ->onlyOnForms()
-            ->setRequired(Crud::PAGE_NEW === $pageName);
+            FormField::addColumn(12),
+            FormField::addPanel('Informations personnelles')->setIcon('fa fa-user'),
+            EmailField::new('email', 'Email')
+                ->setFormTypeOption('attr', ['placeholder' => 'utilisateur@example.com'])
+                ->setColumns(12),
+            TextField::new('lastname', 'Nom')
+                ->setFormTypeOption('attr', ['placeholder' => 'Dupont'])
+                ->setColumns(6),
+            TextField::new('firstname', 'Prénom')
+                ->setFormTypeOption('attr', ['placeholder' => 'Jean'])
+                ->setColumns(6),
+
+            FormField::addPanel('Sécurité')->setIcon('fa fa-shield'),
+            TextField::new('plainPassword', 'Mot de passe')
+                ->setFormType(PasswordType::class)
+                ->setHelp(Crud::PAGE_NEW === $pageName ? 'Saisissez un mot de passe sécurisé' : 'Laissez vide pour conserver le mot de passe actuel')
+                ->setRequired(Crud::PAGE_NEW === $pageName)
+                ->setColumns(12),
+            ChoiceField::new('roles', 'Rôles')
+                ->setChoices($choices)
+                ->allowMultipleChoices()
+                ->setHelp('Sélectionnez un ou plusieurs rôles')
+                ->setColumns(12),
+
+            DateTimeField::new('createdAt', 'Créé le')->hideOnForm(),
+        ];
     }
 
     public function persistEntity(EntityManagerInterface $entityManager, $entityInstance): void

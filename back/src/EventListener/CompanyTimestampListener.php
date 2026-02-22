@@ -12,9 +12,8 @@ use Doctrine\ORM\Events;
 class CompanyTimestampListener
 {
     public function __construct(
-        private readonly GeocodingService $geocodingService
-    ) {
-    }
+        private readonly GeocodingService $geocodingService,
+    ) {}
 
     public function prePersist(Company $company): void
     {
@@ -40,7 +39,7 @@ class CompanyTimestampListener
                 $company->getPostalCode(),
                 $company->getCity(),
             ]));
-            
+
             $coords = $this->geocodingService->geocode($fullAddress);
 
             if (null !== $coords) {

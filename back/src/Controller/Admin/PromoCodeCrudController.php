@@ -44,7 +44,7 @@ class PromoCodeCrudController extends AbstractCrudController
                 ChoiceField::new('discountType', 'Mode de réduction')
                     ->setChoices([
                         PromoCodeDiscountType::PERCENTAGE->label() => PromoCodeDiscountType::PERCENTAGE,
-                        PromoCodeDiscountType::FIXED->label() => PromoCodeDiscountType::FIXED,
+                        PromoCodeDiscountType::FIXED->label()      => PromoCodeDiscountType::FIXED,
                     ]),
                 DateTimeField::new('startAt', 'Début')->setFormat('dd/MM/yyyy'),
                 DateTimeField::new('endAt', 'Fin')->setFormat('dd/MM/yyyy'),
@@ -57,7 +57,7 @@ class PromoCodeCrudController extends AbstractCrudController
                 TextField::new('name', 'Nom')->setColumns(12),
                 ChoiceField::new('type', 'Type')
                     ->setChoices([
-                        PromoCodeType::CUSTOM->label() => PromoCodeType::CUSTOM,
+                        PromoCodeType::CUSTOM->label()  => PromoCodeType::CUSTOM,
                         PromoCodeType::GENERAL->label() => PromoCodeType::GENERAL,
                         PromoCodeType::SERVICE->label() => PromoCodeType::SERVICE,
                     ])
@@ -68,7 +68,7 @@ class PromoCodeCrudController extends AbstractCrudController
                 ChoiceField::new('discountType', 'Mode de réduction')
                     ->setChoices([
                         PromoCodeDiscountType::PERCENTAGE->label() => PromoCodeDiscountType::PERCENTAGE,
-                        PromoCodeDiscountType::FIXED->label() => PromoCodeDiscountType::FIXED,
+                        PromoCodeDiscountType::FIXED->label()      => PromoCodeDiscountType::FIXED,
                     ])
                     ->setColumns(6),
                 NumberField::new('amount', 'Valeur')->setColumns(6),
@@ -82,7 +82,7 @@ class PromoCodeCrudController extends AbstractCrudController
         // PAGE_EDIT / PAGE_NEW
         return [
             IdField::new('id')->hideOnForm()->hideOnIndex()->hideOnDetail(),
-            
+
             FormField::addColumn(12),
             FormField::addPanel('Informations')->setIcon('fa fa-ticket'),
             TextField::new('name', 'Nom')
@@ -90,7 +90,7 @@ class PromoCodeCrudController extends AbstractCrudController
                 ->setColumns(12),
             ChoiceField::new('type', 'Type')
                 ->setChoices([
-                    PromoCodeType::CUSTOM->label() => PromoCodeType::CUSTOM,
+                    PromoCodeType::CUSTOM->label()  => PromoCodeType::CUSTOM,
                     PromoCodeType::GENERAL->label() => PromoCodeType::GENERAL,
                     PromoCodeType::SERVICE->label() => PromoCodeType::SERVICE,
                 ])
@@ -118,10 +118,10 @@ class PromoCodeCrudController extends AbstractCrudController
             ChoiceField::new('discountType', 'Mode de réduction')
                 ->setChoices([
                     PromoCodeDiscountType::PERCENTAGE->label() => PromoCodeDiscountType::PERCENTAGE,
-                    PromoCodeDiscountType::FIXED->label() => PromoCodeDiscountType::FIXED,
+                    PromoCodeDiscountType::FIXED->label()      => PromoCodeDiscountType::FIXED,
                 ])
                 ->setColumns(6),
-         
+
             FormField::addColumn(6),
             FormField::addPanel('Période de validité')->setIcon('fa fa-calendar'),
             DateTimeField::new('startAt', 'Début')
