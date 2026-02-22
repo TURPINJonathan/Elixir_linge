@@ -2,6 +2,10 @@ security:
   password_hashers:
     App\Entity\User: 'auto'
 
+  role_hierarchy:
+    ROLE_ADMIN: [ROLE_USER]
+    ROLE_SUPER_ADMIN: [ROLE_ADMIN, ROLE_USER]
+
   providers:
     app_user_provider:
       entity:
@@ -43,27 +47,49 @@ security:
     #   custom_authenticators:
     #     - gesdinet.jwtrefreshtoken.security.refresh_token_authenticator
 
-    # API protégée par JWT
+    # Interface API Platform (web) protégée par session
+    api_platform_ui:
+      pattern: ^/api(?:/docs(?:\..+)?)?$
+      lazy: true
+      provider: app_user_provider
+      context: main
+      entry_point: App\Security\LoginFormEntryPoint
+
+    # API métier protégée par JWT
     api:
       pattern: ^/api
       stateless: true
       provider: app_user_provider
       jwt: ~
+      logout:
+        path: /api/logout
 
     # Backoffice EasyAdmin (session) - séparé de l’API
     main:
       lazy: true
       provider: app_user_provider
-      # Ici tu peux mettre un form_login si tu as une page login admin
-      # sinon tu peux protéger /backoffice avec ROLE_ADMIN via access_control
+      form_login:
+        login_path: app_login
+        check_path: /login
+        enable_csrf: true
+        default_target_path: /backoffice
+        always_use_default_target_path: true
+      logout:
+        path: /logout
+        target: /login
 
   access_control:
+    - { path: ^/login$, roles: PUBLIC_ACCESS }
     - { path: ^/api/login, roles: PUBLIC_ACCESS }
     - { path: ^/api/token/refresh, roles: PUBLIC_ACCESS }
     - { path: ^/api/logout, roles: PUBLIC_ACCESS }
+
+    # Interface API Platform derrière login
+    - { path: ^/api$, roles: IS_AUTHENTICATED_FULLY }
+    - { path: ^/api/docs, roles: IS_AUTHENTICATED_FULLY }
 
     # Tout le reste de l'API = auth obligatoire
     - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }
 
     # Admin
-    - { path: ^/admin, roles: ROLE_ADMIN }
+    - { path: ^/backoffice, roles: ROLE_ADMIN }
