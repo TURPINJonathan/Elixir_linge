@@ -1,0 +1,12 @@
+{
+    "chat.tools.terminal.autoApprove": {
+        "/^php -l src/Controller/Admin/CompanyCrudController\\.php$/": {
+            "approve": true,
+            "matchCommandLine": true
+        },
+        "/^php -l src/Controller/Admin/PromoCodeCrudController\\.php$/": {
+            "approve": true,
+            "matchCommandLine": true
+        }
+    }
+}
