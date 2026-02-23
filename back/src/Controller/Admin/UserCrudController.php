@@ -3,7 +3,10 @@
 namespace App\Controller\Admin;
 
 use App\Entity\User;
+use App\Enum\UserRole;
 use Doctrine\ORM\EntityManagerInterface;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
@@ -32,7 +35,14 @@ class UserCrudController extends AbstractCrudController
             ->setEntityLabelInPlural('Utilisateurs')
             ->setPageTitle(Crud::PAGE_INDEX, 'Utilisateurs')
             ->setSearchFields(['email', 'firstname', 'lastname'])
-            ->setDefaultSort(['id' => 'DESC']);
+            ->setDefaultSort(['id' => 'DESC'])
+            ->setDefaultRowAction(Action::DETAIL);
+    }
+
+    public function configureActions(Actions $actions): Actions
+    {
+        return $actions
+            ->add(Crud::PAGE_INDEX, Action::DETAIL);
     }
 
     public function configureFields(string $pageName): iterable
@@ -45,9 +55,9 @@ class UserCrudController extends AbstractCrudController
                 TextField::new('firstname', 'Prénom'),
                 ChoiceField::new('roles', 'Rôles')
                     ->setChoices([
-                        'User'        => 'ROLE_USER',
-                        'Admin'       => 'ROLE_ADMIN',
-                        'Super Admin' => 'ROLE_SUPER_ADMIN',
+                        UserRole::USER->label()        => UserRole::USER->value,
+                        UserRole::ADMIN->label()       => UserRole::ADMIN->value,
+                        UserRole::SUPER_ADMIN->label() => UserRole::SUPER_ADMIN->value,
                     ])
                     ->allowMultipleChoices(),
             ];
@@ -55,34 +65,33 @@ class UserCrudController extends AbstractCrudController
 
         if (Crud::PAGE_DETAIL === $pageName) {
             return [
+                FormField::addColumn(6),
                 FormField::addPanel('Informations personnelles')->setIcon('fa fa-user'),
                 EmailField::new('email', 'Email')->setColumns(12),
                 TextField::new('firstname', 'Prénom')->setColumns(6),
                 TextField::new('lastname', 'Nom')->setColumns(6),
 
+                FormField::addColumn(6),
                 FormField::addPanel('Sécurité')->setIcon('fa fa-shield'),
                 ChoiceField::new('roles', 'Rôles')
                     ->setChoices([
-                        'User'        => 'ROLE_USER',
-                        'Admin'       => 'ROLE_ADMIN',
-                        'Super Admin' => 'ROLE_SUPER_ADMIN',
+                        UserRole::USER->label()        => UserRole::USER->value,
+                        UserRole::ADMIN->label()       => UserRole::ADMIN->value,
+                        UserRole::SUPER_ADMIN->label() => UserRole::SUPER_ADMIN->value,
                     ])
                     ->allowMultipleChoices()
                     ->setColumns(12),
-
-                FormField::addPanel('Métadonnées')->setIcon('fa fa-clock'),
-                DateTimeField::new('createdAt', 'Créé le')->setColumns(12),
             ];
         }
 
         // PAGE_EDIT / PAGE_NEW
         $choices = [
-            'User'  => 'ROLE_USER',
-            'Admin' => 'ROLE_ADMIN',
+            UserRole::USER->label()  => UserRole::USER->value,
+            UserRole::ADMIN->label() => UserRole::ADMIN->value,
         ];
 
         if ($this->isGranted('ROLE_SUPER_ADMIN')) {
-            $choices['Super Admin'] = 'ROLE_SUPER_ADMIN';
+            $choices[UserRole::SUPER_ADMIN->label()] = UserRole::SUPER_ADMIN->value;
         }
 
         return [
@@ -169,19 +178,16 @@ class UserCrudController extends AbstractCrudController
             throw new AccessDeniedException('Vous n\'avez pas les droits pour créer/modifier des utilisateurs.');
         }
 
-        $roles = array_values(array_filter(array_unique($user->getRoles()), static fn (string $role): bool => \in_array($role, [
-            'ROLE_USER',
-            'ROLE_ADMIN',
-            'ROLE_SUPER_ADMIN',
-        ], true)));
+        $validRoles = [UserRole::USER->value, UserRole::ADMIN->value, UserRole::SUPER_ADMIN->value];
+        $roles = array_values(array_filter(array_unique($user->getRoles()), static fn (string $role): bool => \in_array($role, $validRoles, true)));
 
-        if (\in_array('ROLE_SUPER_ADMIN', $roles, true) && !$this->isGranted('ROLE_SUPER_ADMIN')) {
+        if (\in_array(UserRole::SUPER_ADMIN->value, $roles, true) && !$this->isGranted('ROLE_SUPER_ADMIN')) {
             throw new AccessDeniedException('Seul un super admin peut attribuer ROLE_SUPER_ADMIN.');
         }
 
         if (!$this->isGranted('ROLE_SUPER_ADMIN')) {
             foreach ($roles as $role) {
-                if (!\in_array($role, ['ROLE_USER', 'ROLE_ADMIN'], true)) {
+                if (!\in_array($role, [UserRole::USER->value, UserRole::ADMIN->value], true)) {
                     throw new AccessDeniedException('Un admin ne peut attribuer que ROLE_ADMIN ou ROLE_USER.');
                 }
             }

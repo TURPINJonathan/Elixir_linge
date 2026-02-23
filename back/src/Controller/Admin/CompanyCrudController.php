@@ -3,6 +3,8 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Company;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
@@ -28,7 +30,14 @@ class CompanyCrudController extends AbstractCrudController
             ->setEntityLabelInPlural('Entreprises')
             ->setPageTitle(Crud::PAGE_INDEX, 'Entreprises')
             ->setDefaultSort(['created_at' => 'DESC'])
-            ->setSearchFields(['name', 'city', 'email', 'phone_number']);
+            ->setSearchFields(['name', 'city', 'email', 'phone_number'])
+            ->setDefaultRowAction(Action::DETAIL);
+    }
+
+    public function configureActions(Actions $actions): Actions
+    {
+        return $actions
+            ->add(Crud::PAGE_INDEX, Action::DETAIL);
     }
 
     public function configureFields(string $pageName): iterable
@@ -46,25 +55,44 @@ class CompanyCrudController extends AbstractCrudController
         }
 
         if (Crud::PAGE_DETAIL === $pageName) {
-            return [
-                FormField::addPanel('Informations')->setIcon('fa fa-building'),
-                TextField::new('name', 'Nom')->setFormTypeOption('attr', ['placeholder' => 'Elixir Linge'])->setColumns(12),
+            // Récupérer l'entité courante pour accéder aux coordonnées
+            $entityDto = $this->getContext()->getEntity();
+            $company = $entityDto->getInstance() instanceof Company ? $entityDto->getInstance() : null;
 
+            return [
+                FormField::addColumn(6),
+                FormField::addPanel('Informations')->setIcon('fa fa-building'),
+                TextField::new('name', 'Nom')->setColumns(12),
+
+                FormField::addColumn(6),
+                FormField::addPanel('Contact')->setIcon('fa fa-phone'),
+                TelephoneField::new('phoneNumber', 'Téléphone')->setColumns(6),
+                EmailField::new('email', 'Email')->setColumns(6),
+
+                FormField::addColumn(6),
+                FormField::addPanel('Localisation')->setIcon('fa fa-map')
+                    ->setHelp($this->renderMapWidgetReadOnly($company)),
+
+                FormField::addColumn(6),
                 FormField::addPanel('Adresse')->setIcon('fa fa-map-marker'),
                 TextField::new('address', 'Adresse')->setColumns(12),
                 TextField::new('postalCode', 'Code postal')->setColumns(3),
                 TextField::new('city', 'Ville')->setColumns(9),
 
-                FormField::addPanel('Contact')->setIcon('fa fa-phone'),
-                TelephoneField::new('phoneNumber', 'Téléphone')->setColumns(6),
-                EmailField::new('email', 'Email')->setColumns(6),
+                FormField::addPanel('Informations complémentaires')->setIcon('fa fa-plus'),
+                TextareaField::new('privateNote', 'Note')->renderAsHtml()->setColumns(12),
 
-                FormField::addPanel('Notes privées')->setIcon('fa fa-lock'),
-                TextareaField::new('privateNote', 'Note')->setFormTypeOption('attr', ['placeholder' => 'La note privée ne sera jamais envoyée à qui que ce soit !'])->setColumns(12),
-
-                FormField::addPanel('Métadonnées')->setIcon('fa fa-clock'),
-                DateTimeField::new('createdAt', 'Créé le')->setColumns(6),
-                DateTimeField::new('updatedAt', 'Modifié le')->setColumns(6),
+                // Champs cachés pour les coordonnées (nécessaires pour la carte en PAGE_DETAIL)
+                TextField::new('latitude')
+                    ->hideOnIndex()
+                    ->hideOnForm()
+                    ->hideOnDetail()
+                    ->setFormTypeOption('row_attr', ['style' => 'display:none;']),
+                TextField::new('longitude')
+                    ->hideOnIndex()
+                    ->hideOnForm()
+                    ->hideOnDetail()
+                    ->setFormTypeOption('row_attr', ['style' => 'display:none;']),
             ];
         }
 
@@ -107,6 +135,40 @@ class CompanyCrudController extends AbstractCrudController
             DateTimeField::new('createdAt', 'Créé le')->hideOnForm(),
             DateTimeField::new('updatedAt', 'Modifié le')->hideOnForm(),
         ];
+    }
+
+    private function renderMapWidgetReadOnly(?Company $company): string
+    {
+        $lat = $company?->getLatitude() ? (float) $company->getLatitude() : 48.8566;
+        $lng = $company?->getLongitude() ? (float) $company->getLongitude() : 2.3522;
+        $hasCoordinates = ($company && $company->getLatitude() && $company->getLongitude()) ? 'true' : 'false';
+
+        return <<<HTML
+            <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+            <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+            <div id="company-map-readonly" style="height: 400px; width: 100%; border: 1px solid #ddd; border-radius: 4px; margin-top: 10px;"></div>
+            <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const lat = {$lat};
+                const lng = {$lng};
+                const hasCoordinates = {$hasCoordinates};
+                
+                const map = L.map('company-map-readonly').setView([lat, lng], hasCoordinates ? 16 : 6);
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '© OpenStreetMap contributors',
+                    maxZoom: 19
+                }).addTo(map);
+                
+                if (hasCoordinates) {
+                    const marker = L.marker([lat, lng]).addTo(map);
+                    marker.bindPopup('<b>📍 Localisation</b><br/>Lat: ' + lat + '<br/>Lng: ' + lng);
+                    console.log('Carte affichée avec coordonnées:', lat, lng);
+                } else {
+                    console.warn('Pas de coordonnées disponibles - affichage de la vue par défaut');
+                }
+            });
+            </script>
+            HTML;
     }
 
     private function renderMapWidget(): string

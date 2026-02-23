@@ -5,6 +5,8 @@ namespace App\Controller\Admin;
 use App\Entity\PromoCode;
 use App\Enum\PromoCodeDiscountType;
 use App\Enum\PromoCodeType;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
@@ -31,7 +33,14 @@ class PromoCodeCrudController extends AbstractCrudController
             ->setEntityLabelInPlural('Codes promo')
             ->setPageTitle(Crud::PAGE_INDEX, 'Codes promo')
             ->setDefaultSort(['start_at' => 'DESC'])
-            ->setSearchFields(['name', 'description', 'type', 'discountType', 'amount']);
+            ->setSearchFields(['name', 'description', 'type', 'discountType', 'amount'])
+            ->setDefaultRowAction(Action::DETAIL);
+    }
+
+    public function configureActions(Actions $actions): Actions
+    {
+        return $actions
+            ->add(Crud::PAGE_INDEX, Action::DETAIL);
     }
 
     public function configureFields(string $pageName): iterable
@@ -53,26 +62,22 @@ class PromoCodeCrudController extends AbstractCrudController
 
         if (Crud::PAGE_DETAIL === $pageName) {
             return [
+                FormField::addColumn(6),
                 FormField::addPanel('Informations')->setIcon('fa fa-ticket'),
                 TextField::new('name', 'Nom')->setColumns(12),
-                ChoiceField::new('type', 'Type')
-                    ->setChoices([
-                        PromoCodeType::CUSTOM->label()  => PromoCodeType::CUSTOM,
-                        PromoCodeType::GENERAL->label() => PromoCodeType::GENERAL,
-                        PromoCodeType::SERVICE->label() => PromoCodeType::SERVICE,
-                    ])
-                    ->setColumns(12),
-                TextareaField::new('description', 'Description')->setColumns(12),
+                TextareaField::new('description', 'Description')->renderAsHtml()->setColumns(12),
 
+                FormField::addColumn(6),
                 FormField::addPanel('Réduction')->setIcon('fa fa-percent'),
                 ChoiceField::new('discountType', 'Mode de réduction')
                     ->setChoices([
                         PromoCodeDiscountType::PERCENTAGE->label() => PromoCodeDiscountType::PERCENTAGE,
                         PromoCodeDiscountType::FIXED->label()      => PromoCodeDiscountType::FIXED,
                     ])
-                    ->setColumns(6),
-                NumberField::new('amount', 'Valeur')->setColumns(6),
+                    ->setColumns(12),
+                NumberField::new('amount', 'Valeur')->setColumns(12),
 
+                FormField::addColumn(12),
                 FormField::addPanel('Période de validité')->setIcon('fa fa-calendar'),
                 DateTimeField::new('startAt', 'Début')->setColumns(6),
                 DateTimeField::new('endAt', 'Fin')->setColumns(6),
