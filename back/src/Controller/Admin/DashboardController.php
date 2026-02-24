@@ -5,6 +5,7 @@ namespace App\Controller\Admin;
 use App\Entity\Company;
 use App\Entity\Customer;
 use App\Entity\PromoCode;
+use App\Entity\Rate;
 use App\Entity\User;
 use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminDashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
@@ -59,7 +60,7 @@ class DashboardController extends AbstractDashboardController
 
         // yield MenuItem::linkToCrud('Services', 'fa fa-concierge-bell', User::class);
 
-        // yield MenuItem::linkToCrud('Tarifs', 'fa fa-coins', User::class);
+        yield MenuItem::linkToCrud('Tarifs', 'fa fa-coins', Rate::class);
 
         yield MenuItem::linkToCrud('Remises', 'fa fa-tags', PromoCode::class);
 
