@@ -72,7 +72,6 @@ security:
         check_path: /login
         enable_csrf: true
         default_target_path: /backoffice
-        always_use_default_target_path: true
       logout:
         path: /logout
         target: /login
