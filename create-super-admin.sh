@@ -27,7 +27,7 @@ else
     read -r -p "Email : " EMAIL
   done
 
-  read -r -s -p "Mot de passe : " PASSWORD
+  read -r -s -p "Mot de passe (au moins 8 caractères) : " PASSWORD
   echo
   while [ -z "${PASSWORD}" ]; do
     echo "Le mot de passe est obligatoire."
