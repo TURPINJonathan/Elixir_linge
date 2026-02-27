@@ -34,11 +34,11 @@ class MediaServeController extends AbstractController
 
         return new Response($content, 200, [
             'Content-Type'        => $media->getMimeType(),
-            'Content-Disposition' => sprintf(
+            'Content-Disposition' => \sprintf(
                 'attachment; filename="%s"',
-                addslashes($media->getOriginalName())
+                addslashes($media->getOriginalName()),
             ),
-            'Content-Length' => strlen($content),
+            'Content-Length'      => \strlen($content),
         ]);
     }
 
@@ -75,7 +75,7 @@ class MediaServeController extends AbstractController
         [$color, $icon, $label] = match (true) {
             str_starts_with($mimeType, 'video/')       => ['#3b82f6', '▶', 'VIDEO'],
             str_starts_with($mimeType, 'audio/')       => ['#10b981', '♪', 'AUDIO'],
-            $mimeType === 'application/pdf'             => ['#ef4444', 'PDF', 'PDF'],
+            'application/pdf' === $mimeType            => ['#ef4444', 'PDF', 'PDF'],
             str_starts_with($mimeType, 'application/') => ['#8b5cf6', '⬜', 'FICHIER'],
             str_starts_with($mimeType, 'text/')        => ['#f59e0b', '≡', 'TEXTE'],
             default                                    => ['#6b7280', '⬜', 'FICHIER'],

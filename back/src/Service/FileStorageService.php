@@ -8,16 +8,17 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 class FileStorageService
 {
     private string $mediaDir;
+
     private string $thumbnailDir;
 
     public function __construct(string $projectDir)
     {
-        $this->mediaDir     = $projectDir . '/var/uploads/media/';
+        $this->mediaDir = $projectDir . '/var/uploads/media/';
         $this->thumbnailDir = $projectDir . '/var/uploads/thumbnails/';
 
         foreach ([$this->mediaDir, $this->thumbnailDir] as $dir) {
             if (!is_dir($dir)) {
-                mkdir($dir, 0755, true);
+                mkdir($dir, 0o755, true);
             }
         }
     }
@@ -29,9 +30,9 @@ class FileStorageService
     public function store(MediaFile $media, UploadedFile $file): void
     {
         $storedFilename = bin2hex(random_bytes(16));
-        $mimeType       = $file->getMimeType() ?? 'application/octet-stream';
+        $mimeType = $file->getMimeType() ?? 'application/octet-stream';
         $originalContent = file_get_contents($file->getPathname());
-        $originalSize    = strlen($originalContent);
+        $originalSize = \strlen($originalContent);
 
         $isCompressed = false;
         $hasThumbnail = false;
@@ -49,9 +50,9 @@ class FileStorageService
         } else {
             // gzcompress uniquement si ça réduit la taille
             $compressed = gzcompress($originalContent, 6);
-            if (false !== $compressed && strlen($compressed) < $originalSize) {
+            if (false !== $compressed && \strlen($compressed) < $originalSize) {
                 $storedContent = $compressed;
-                $isCompressed  = true;
+                $isCompressed = true;
             } else {
                 $storedContent = $originalContent;
             }
@@ -62,7 +63,7 @@ class FileStorageService
         $media->setOriginalName($file->getClientOriginalName());
         $media->setMimeType($mimeType);
         $media->setSize($originalSize);
-        $media->setStoredSize(strlen($storedContent));
+        $media->setStoredSize(\strlen($storedContent));
         $media->setStoredFilename($storedFilename);
         $media->setIsCompressed($isCompressed);
         $media->setHasThumbnail($hasThumbnail);
@@ -131,8 +132,8 @@ class FileStorageService
 
         if ($origW > $maxSize || $origH > $maxSize) {
             $ratio = min($maxSize / $origW, $maxSize / $origH);
-            $newW  = max(1, (int) ($origW * $ratio));
-            $newH  = max(1, (int) ($origH * $ratio));
+            $newW = max(1, (int) ($origW * $ratio));
+            $newH = max(1, (int) ($origH * $ratio));
 
             $resized = imagecreatetruecolor($newW, $newH);
             // Préserver la transparence
@@ -161,13 +162,13 @@ class FileStorageService
             return;
         }
 
-        $origW    = imagesx($im);
-        $origH    = imagesy($im);
+        $origW = imagesx($im);
+        $origH = imagesy($im);
         $thumbMax = 200;
 
         $ratio = min($thumbMax / $origW, $thumbMax / $origH);
-        $newW  = max(1, (int) ($origW * $ratio));
-        $newH  = max(1, (int) ($origH * $ratio));
+        $newW = max(1, (int) ($origW * $ratio));
+        $newH = max(1, (int) ($origH * $ratio));
 
         $thumb = imagecreatetruecolor($newW, $newH);
         // Préserver la transparence
