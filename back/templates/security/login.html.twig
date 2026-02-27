@@ -86,8 +86,8 @@
   .brand{
     display:flex;
     align-items:center;
-    gap: 12px;
-    margin-bottom: 10px;
+    gap: 6px;
+    margin-bottom: 16px;
   }
 
   .brand-logo{
@@ -137,14 +137,16 @@
     border: 1px solid rgba(255,75,75,.35);
     background: rgba(255,75,75,.12);
     color: rgba(255,255,255,.92);
+    text-align: center;
   }
 
-  .field{ margin-bottom: 14px; }
+  .field{ margin-bottom: 10px; width: 100%; }
   .label{
     display:block;
     font-size: .92rem;
     margin: 0 0 8px;
     color: rgba(255,255,255,.86);
+    text-align: center;
   }
 
   .input{
@@ -233,9 +235,9 @@
         </div>
       {% endif %}
 
-      <form method="post" novalidate>
+      <form method="post" novalidate style="width: 100%;">
         <div class="field">
-          <label class="label" for="username">Email</label>
+          {# <label class="label" for="username">Email</label> #}
           <input class="input"
                  id="username"
                  name="_username"
@@ -243,18 +245,20 @@
                  value="{{ last_username }}"
                  autocomplete="email"
                  placeholder="ex: contact@elixirlinge.fr"
+                 style="width: stretch; text-align: center"
                  required
                  autofocus>
         </div>
 
         <div class="field">
-          <label class="label" for="password">Mot de passe</label>
+          {# <label class="label" for="password">Mot de passe</label> #}
           <input class="input"
                  id="password"
                  name="_password"
                  type="password"
                  autocomplete="current-password"
                  placeholder="••••••••••"
+                 style="width: stretch; text-align: center"
                  required>
         </div>
 
