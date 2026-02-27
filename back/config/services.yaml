@@ -25,3 +25,7 @@ services:
     App\Security\LoginSuccessHandler:
         arguments:
             $appEnv: '%kernel.environment%'
+
+    App\Service\FileStorageService:
+        arguments:
+            $projectDir: '%kernel.project_dir%'

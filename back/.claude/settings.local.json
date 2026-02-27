@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cd /c/Users/turpi/Desktop/Projects/Elixir_linge/back && php bin/console cache:warmup 2>&1)"
+    ]
+  }
+}
