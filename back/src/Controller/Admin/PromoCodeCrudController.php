@@ -5,6 +5,7 @@ namespace App\Controller\Admin;
 use App\Entity\PromoCode;
 use App\Enum\PromoCodeDiscountType;
 use App\Enum\PromoCodeType;
+use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminRoute;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
@@ -19,6 +20,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use Symfony\Component\Validator\Constraints as Assert;
 
+#[AdminRoute(path: 'promo-codes', name: 'promo_codes')]
 class PromoCodeCrudController extends AbstractCrudController
 {
     public static function getEntityFqcn(): string

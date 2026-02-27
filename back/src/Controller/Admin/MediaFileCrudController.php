@@ -5,6 +5,7 @@ namespace App\Controller\Admin;
 use App\Entity\MediaFile;
 use App\Service\FileStorageService;
 use Doctrine\ORM\EntityManagerInterface;
+use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminRoute;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
@@ -17,6 +18,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 
+#[AdminRoute(path: 'media', name: 'media')]
 class MediaFileCrudController extends AbstractCrudController
 {
     public function __construct(private readonly FileStorageService $fileStorage) {}
@@ -80,7 +82,6 @@ class MediaFileCrudController extends AbstractCrudController
                 TextField::new('alt', 'Texte descriptif')->setColumns(12),
                 BooleanField::new('isVisibleOnWebsite', 'Visible sur le site')->setColumns(12),
 
-                    
                 FormField::addColumn(6),
                 FormField::addPanel('Métadonnées')->setIcon('fa fa-tags'),
                 TextField::new('originalName', 'Nom du fichier')->setColumns(6),
@@ -157,7 +158,7 @@ class MediaFileCrudController extends AbstractCrudController
 
     public function updateEntity(EntityManagerInterface $em, $entityInstance): void
     {
-        /** @var MediaFile $entityInstance */
+        /* @var MediaFile $entityInstance */
         $entityInstance->setUpdatedAt(new \DateTimeImmutable());
 
         parent::updateEntity($em, $entityInstance);
@@ -165,7 +166,7 @@ class MediaFileCrudController extends AbstractCrudController
 
     public function deleteEntity(EntityManagerInterface $em, $entityInstance): void
     {
-        /** @var MediaFile $entityInstance */
+        /* @var MediaFile $entityInstance */
         $this->fileStorage->delete($entityInstance);
 
         parent::deleteEntity($em, $entityInstance);

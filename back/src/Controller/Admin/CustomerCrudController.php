@@ -4,6 +4,7 @@ namespace App\Controller\Admin;
 
 use App\Entity\Customer;
 use App\Enum\CustomerTitle;
+use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminRoute;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
@@ -19,6 +20,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
+#[AdminRoute(path: 'customers', name: 'customers')]
 class CustomerCrudController extends AbstractCrudController
 {
     public static function getEntityFqcn(): string
