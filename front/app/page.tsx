@@ -11,7 +11,7 @@ export default function HomePage() {
         <div className="mx-auto w-full max-w-6xl px-4 pb-16 pt-10 md:pb-26 md:pt-14">
           <div className="relative flex items-end justify-between">
             <div className="flex-2 flex flex-col gap-4 items-center md:items-start md:gap-14 md:bg-[url('/home-linge.webp')] md:[background-size:40%] md:[background-position:right_bottom] md:[background-repeat:no-repeat]">
-              <div className="flex flex-col gap-2 md:max-w-[955px]">
+              <div className="flex flex-col items-center md:items-start gap-2 md:max-w-[955px]">
                 <Chip
                   label="Linge collecté le matin • Retour sous 24/48h"
                   variant="default"

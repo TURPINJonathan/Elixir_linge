@@ -64,9 +64,12 @@ export default function Footer() {
         </div>
 
         <div className="flex justify-between opacity-20 border-t text-xs pt-5">
-          <span>
-            <Copyright size={16} className="inline-block" /> {currentDate} - All rights reserved.
-          </span>
+          <div className="flex flex-col">
+            <span>
+              <Copyright size={16} className="inline-block" /> All rights reserved.
+            </span>
+            <span>{currentDate}</span>
+          </div>
 
           <div className="flex gap-5">
             <span>Mentions légales</span>
