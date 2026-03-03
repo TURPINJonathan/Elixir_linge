@@ -4,6 +4,6 @@
   "rules": {
     "order/properties-alphabetical-order": null,
     "custom-property-no-missing-var-function": null,
-    "scss/at-import-partial-extension": null
+    "selector-class-pattern": null
   }
 }
