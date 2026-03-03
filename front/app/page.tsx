@@ -1,12 +1,9 @@
-import { Header, Footer } from '@components/layout';
 import { CardComponent, Chip, SectionDivider } from '@components/ui';
 import { Calendar, Package, Sparkles, Truck } from 'lucide-react';
 
 export default function HomePage() {
   return (
-    <main className="paper-grain min-h-screen bg-[var(--bg)] text-[var(--text)]">
-      <Header />
-
+    <>
       <section className="sparkle">
         <div className="mx-auto w-full max-w-6xl px-4 pb-16 pt-10 md:pb-26 md:pt-14">
           <div className="relative flex items-end justify-between">
@@ -142,7 +139,6 @@ export default function HomePage() {
           </div>
         </div>
       </section>
-      <Footer />
-    </main>
+    </>
   );
 }
