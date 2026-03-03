@@ -27,7 +27,7 @@ export default function HomePage() {
               </div>
 
               <div className="flex flex-wrap gap-3">
-                <a className="btn btn-primary" href="/contact">
+                <a className="btn btn-primary" href="/services">
                   Nos services <span aria-hidden="true">›</span>
                 </a>
                 <a className="btn btn-secondary" href="/tarifs">
