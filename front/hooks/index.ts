@@ -1,0 +1,1 @@
+export { useInViewFadeUp } from './useInViewFadeUp';

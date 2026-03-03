@@ -1,0 +1,42 @@
+$color-text: #411b3c;
+$color-muted: #772d63;
+$color-accent: #b87ba4;
+$color-bg-start: #f7d9ea;
+$color-bg-end: #f3cde2;
+$color-surface: rgb(255 255 255 / 75%);
+$color-white: #fff;
+$color-success: #22c55e;
+$color-success-dark: #14532d;
+$color-success-mid: #16a34a;
+$color-danger: #ef4444;
+$color-danger-dark: #7f1d1d;
+$color-danger-mid: #dc2626;
+$color-warning: #f59e0b;
+$color-warning-dark: #78350f;
+$color-warning-mid: #d97706;
+$color-info: #3b82f6;
+$color-info-dark: #1e3a8a;
+$color-info-mid: #2563eb;
+$color-neutral: #9ca3af;
+$color-neutral-dark: #374151;
+$color-neutral-mid: #6b7280;
+$radius-card: 24px;
+$radius-btn: 16px;
+$radius-badge: 9999px;
+$header-height: 72px;
+
+:root {
+  --bg-start: #{$color-bg-start};
+  --bg-end: #{$color-bg-end};
+  --surface: #{$color-surface};
+  --text: #{$color-text};
+  --muted: #{$color-muted};
+  --accent: #{$color-accent};
+  --success: #{$color-success};
+  --danger: #{$color-danger};
+  --warning: #{$color-warning};
+  --info: #{$color-info};
+  --neutral: #{$color-neutral};
+  --radius-card: #{$radius-card};
+  --radius-btn: #{$radius-btn};
+}

@@ -1,0 +1,214 @@
+@use '../variables' as *;
+@use 'sass:list';
+
+$chip-variants: (
+  'default': (
+    $color-accent,
+    $color-text,
+    $color-muted,
+  ),
+  'success': (
+    $color-success,
+    $color-success-dark,
+    $color-success-mid,
+  ),
+  'danger': (
+    $color-danger,
+    $color-danger-dark,
+    $color-danger-mid,
+  ),
+  'warning': (
+    $color-warning,
+    $color-warning-dark,
+    $color-warning-mid,
+  ),
+  'info': (
+    $color-info,
+    $color-info-dark,
+    $color-info-mid,
+  ),
+  'neutral': (
+    $color-neutral,
+    $color-neutral-dark,
+    $color-neutral-mid,
+  ),
+);
+
+@layer components {
+  .chip {
+    cursor: default;
+    user-select: none;
+    position: relative;
+    display: inline-flex;
+    gap: 5px;
+    align-items: center;
+    padding: 4px 10px;
+    border: 1.5px solid transparent;
+    border-radius: $radius-badge;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1;
+    text-decoration: none;
+    white-space: nowrap;
+    transition:
+      opacity 0.15s ease,
+      transform 0.15s ease,
+      box-shadow 0.15s ease;
+
+    &--sm {
+      gap: 3px;
+      padding: 2px 8px;
+      font-size: 11px;
+    }
+
+    &--lg {
+      gap: 6px;
+      padding: 6px 14px;
+      font-size: 14px;
+    }
+
+    &--dense {
+      padding-top: 1px;
+      padding-bottom: 1px;
+
+      &.chip--sm {
+        padding-top: 0;
+        padding-bottom: 0;
+      }
+
+      &.chip--lg {
+        padding-top: 3px;
+        padding-bottom: 3px;
+      }
+    }
+
+    &--interactive {
+      cursor: pointer;
+
+      &:hover:not(.chip--disabled) {
+        transform: translateY(-1px);
+      }
+
+      &:active:not(.chip--disabled) {
+        transform: none;
+      }
+
+      &:focus-visible {
+        outline: 2px solid currentcolor;
+        outline-offset: 2px;
+      }
+    }
+
+    &--elevated {
+      box-shadow: 0 2px 8px rgba($color-text, 0.12);
+    }
+
+    &--disabled {
+      pointer-events: none;
+      opacity: 0.45;
+    }
+
+    &__icon {
+      display: flex;
+      flex-shrink: 0;
+      align-items: center;
+      justify-content: center;
+      line-height: 0;
+    }
+
+    &__dot {
+      flex-shrink: 0;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+    }
+
+    // &__label {
+    // Hérite de .chip
+    // }
+
+    &__delete {
+      cursor: pointer;
+      display: flex;
+      flex-shrink: 0;
+      align-items: center;
+      justify-content: center;
+      padding: 1px;
+      border: none;
+      border-radius: 50%;
+      line-height: 0;
+      color: currentcolor;
+      background: transparent;
+      transition: background 0.15s ease;
+
+      &:hover {
+        background: rgb(0 0 0 / 10%);
+      }
+
+      &:focus-visible {
+        outline: 2px solid currentcolor;
+        outline-offset: 1px;
+      }
+    }
+
+    @each $name, $colors in $chip-variants {
+      $raw: list.nth($colors, 1);
+      $text: list.nth($colors, 2);
+      $otxt: list.nth($colors, 3);
+
+      &--#{$name} {
+        border-color: rgba($raw, 0.22);
+        color: $text;
+        background: rgba($raw, 0.13);
+
+        .chip__dot {
+          background-color: $raw;
+        }
+
+        &.chip--elevated {
+          box-shadow: 0 2px 10px rgba($raw, 0.28);
+        }
+
+        &.chip--outline {
+          border-color: rgba($raw, 0.5);
+          color: $otxt;
+          background: transparent;
+
+          .chip__dot {
+            background-color: $otxt;
+          }
+        }
+      }
+    }
+
+    &--primary {
+      border-color: transparent;
+      color: $color-white;
+      background: linear-gradient(135deg, $color-muted, $color-text);
+
+      .chip__dot {
+        background-color: rgba($color-white, 0.75);
+      }
+
+      .chip__delete {
+        &:hover {
+          background: rgba($color-white, 0.2);
+        }
+      }
+
+      &.chip--elevated {
+        box-shadow: 0 2px 12px rgba($color-text, 0.35);
+      }
+
+      &.chip--outline {
+        border-color: rgba($color-muted, 0.5);
+        color: $color-muted;
+        background: transparent;
+
+        .chip__dot {
+          background-color: $color-muted;
+        }
+      }
+    }
+  }
+}
