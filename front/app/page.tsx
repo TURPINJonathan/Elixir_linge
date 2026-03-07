@@ -1,4 +1,4 @@
-import { CardComponent, Chip, SectionDivider } from '@components/ui';
+import { CardComponent, Chip, FeatureItemComponent, SectionDivider } from '@components/ui';
 import { Calendar, Package, Sparkles, Truck } from 'lucide-react';
 
 export default function HomePage() {
@@ -74,69 +74,29 @@ export default function HomePage() {
         </div>
 
         <div className="flex flex-col gap-4 items-center max-w-[776px] mx-auto items-start">
-          <div className="flex gap-8 items-center">
-            <div
-              className="step-icon btn-primary rounded-xl flex items-center justify-center"
-              style={{ width: '75px', height: '75px', backgroundColor: 'var(--text)', color: 'var(--bg-start)' }}
-            >
-              <Calendar size={32} />
-            </div>
+          <FeatureItemComponent
+            icon={Calendar}
+            title="Planification de votre collecte"
+            text="Vous nous contactez afin de planifier la collecte de votre linge."
+          />
 
-            <div className="flex-1 flex flex-col justify-center">
-              <h3 className="font-display text-xl font-bold tracking-tight">Planification de votre collecte</h3>
-              <p className="font-body text-base leading-relaxed text-[rgba(65,27,60,0.82)]">
-                Vous nous contactez afin de planifier la collecte de votre linge.
-              </p>
-            </div>
-          </div>
+          <FeatureItemComponent
+            icon={Package}
+            title="Collecte de votre linge"
+            text="Nous récupérons votre linge directement sur votre lieu de travail aux horaires convenus."
+          />
 
-          <div className="flex gap-8 items-center">
-            <div
-              className="step-icon btn-primary rounded-xl flex items-center justify-center"
-              style={{ width: '75px', height: '75px', backgroundColor: 'var(--text)', color: 'var(--bg-start)' }}
-            >
-              <Package size={32} />
-            </div>
+          <FeatureItemComponent
+            icon={Sparkles}
+            title="Service premium"
+            text="Lavage, repassage et pressing par nos équipes qualifiées avec produits haut de gamme."
+          />
 
-            <div className="flex-1 flex flex-col justify-center">
-              <h3 className="font-display text-xl font-bold tracking-tight">Collecte de votre linge</h3>
-              <p className="font-body text-base leading-relaxed text-[rgba(65,27,60,0.82)]">
-                Nous récupérons votre linge directement sur votre lieu de travail aux horaires convenus.
-              </p>
-            </div>
-          </div>
-
-          <div className="flex gap-8 items-center">
-            <div
-              className="step-icon btn-primary rounded-xl flex items-center justify-center"
-              style={{ width: '75px', height: '75px', backgroundColor: 'var(--text)', color: 'var(--bg-start)' }}
-            >
-              <Sparkles size={32} />
-            </div>
-
-            <div className="flex-1 flex flex-col justify-center">
-              <h3 className="font-display text-xl font-bold tracking-tight">Service premium</h3>
-              <p className="font-body text-base leading-relaxed text-[rgba(65,27,60,0.82)]">
-                Lavage, repassage et pressing par nos équipes qualifiées avec produits haut de gamme.
-              </p>
-            </div>
-          </div>
-
-          <div className="flex gap-8 items-center">
-            <div
-              className="step-icon btn-primary rounded-xl flex items-center justify-center"
-              style={{ width: '75px', height: '75px', backgroundColor: 'var(--text)', color: 'var(--bg-start)' }}
-            >
-              <Truck size={32} />
-            </div>
-
-            <div className="flex-1 flex flex-col justify-center">
-              <h3 className="font-display text-xl font-bold tracking-tight">Livraison rapide</h3>
-              <p className="font-body text-base leading-relaxed text-[rgba(65,27,60,0.82)]">
-                Retour de votre linge propre et repassé sous 24 à 48h à votre bureau !
-              </p>
-            </div>
-          </div>
+          <FeatureItemComponent
+            icon={Truck}
+            title="Livraison rapide"
+            text="Retour de votre linge propre et repassé sous 24 à 48h à votre bureau !"
+          />
         </div>
       </section>
     </>
