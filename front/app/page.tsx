@@ -89,7 +89,7 @@ export default function HomePage() {
           <FeatureItemComponent
             icon={Sparkles}
             title="Service premium"
-            text="Lavage, repassage et pressing par nos équipes qualifiées avec produits haut de gamme."
+            text="Repassage et pressing par nos équipes qualifiées avec produits haut de gamme."
           />
 
           <FeatureItemComponent

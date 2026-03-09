@@ -53,7 +53,7 @@ class DashboardController extends AbstractDashboardController
 
         yield MenuItem::subMenu('Clients', 'fa fa-users')->setSubItems([
             MenuItem::linkToRoute('Entreprises', 'fa fa-building', 'back_office_companies_index'),
-            MenuItem::linkToRoute('Clients', 'fa fa-user-tie', 'back_office_customers_index'),
+            // MenuItem::linkToRoute('Clients', 'fa fa-user-tie', 'back_office_customers_index'),
         ]);
 
         yield MenuItem::subMenu('Médiathèque', 'fa fa-photo-film')->setSubItems([
