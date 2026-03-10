@@ -27,7 +27,11 @@ export default function ServiceBlockComponent({
         isImageLeft ? 'md:order-2 md:items-start' : 'md:items-end'
       }`}
     >
-      <h2 className={`font-display text-2xl font-bold border-b border-[#411B3C] w-full ${isImageLeft ? 'md:text-start text-center' : 'md:text-end text-center'}`}>{title}</h2>
+      <h2
+        className={`font-display text-2xl font-bold border-b border-[#411B3C] w-full ${isImageLeft ? 'md:text-start text-center' : 'md:text-end text-center'}`}
+      >
+        {title}
+      </h2>
 
       <p
         className={`font-body text-base text-center leading-relaxed text-[rgba(65,27,60,0.82)] ${

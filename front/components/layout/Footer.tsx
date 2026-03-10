@@ -7,7 +7,7 @@ export default function Footer() {
   const currentDate = `${month} ${year}`;
 
   return (
-    <footer className="bg-gradient-to-br from-[#411B3C] to-[#772D63] text-white">
+    <footer className="bg-gradient-to-br from-[#411B3C] to-[#772D63] text-[var(--text-light)]">
       <div className="mx-auto w-full max-w-6xl px-4 py-10 flex flex-col gap-5">
         <div className="flex flex-wrap gap-10">
           <div className="flex-1 basis-[430px] flex flex-col gap-4">

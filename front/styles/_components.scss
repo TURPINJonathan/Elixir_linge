@@ -20,13 +20,19 @@
   }
 
   .btn-primary {
-    color: $color-white;
+    color: $color-text-light;
     background: linear-gradient(135deg, $color-muted, $color-text);
     box-shadow: 0 10px 30px rgba($color-text, 0.4);
 
     &:hover {
       transform: translateY(-2px);
     }
+  }
+
+  .bg-premium {
+    color: $color-text-light;
+    background: linear-gradient(135deg, $color-muted, $color-text);
+    box-shadow: 0 10px 30px rgba($color-text, 0.4);
   }
 
   .btn-secondary {

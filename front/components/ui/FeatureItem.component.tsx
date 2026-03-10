@@ -15,7 +15,6 @@ export default function FeatureItemComponent({ icon: Icon, title, text }: Featur
           width: '75px',
           height: '75px',
           backgroundColor: 'var(--text)',
-          color: 'var(--bg-start)',
         }}
       >
         <Icon size={32} />
