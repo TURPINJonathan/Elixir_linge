@@ -8,10 +8,6 @@ export default function AboutPage() {
           <h1 className="font-display text-4xl font-bold leading-tight tracking-tight text-[var(--text)] md:text-5xl">
             À propos de nous
           </h1>
-
-          <p className="mx-auto max-w-2xl font-body text-base leading-relaxed text-[rgba(65,27,60,0.82)] md:text-lg">
-            Des formules simples, pensées pour s’adapter à votre volume de linge et à votre rythme.
-          </p>
         </div>
       </section>
 
