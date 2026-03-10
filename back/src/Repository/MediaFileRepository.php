@@ -15,4 +15,15 @@ class MediaFileRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, MediaFile::class);
     }
+
+    /** @return list<MediaFile> */
+    public function findVisibleOnWebsiteOrderByCreatedAt(): array
+    {
+        return $this->createQueryBuilder('m')
+            ->andWhere('m.isVisibleOnWebsite = :visible')
+            ->setParameter('visible', true)
+            ->orderBy('m.createdAt', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
 }

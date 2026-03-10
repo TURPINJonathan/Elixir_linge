@@ -54,6 +54,12 @@ security:
       context: main
       entry_point: App\Security\LoginFormEntryPoint
 
+    # Galerie publique (sans auth)
+    api_public:
+      pattern: ^/api/public
+      stateless: true
+      security: false
+
     # API métier protégée par JWT
     api:
       pattern: ^/api
@@ -81,6 +87,7 @@ security:
     - { path: ^/api/login, roles: PUBLIC_ACCESS }
     - { path: ^/api/token/refresh, roles: PUBLIC_ACCESS }
     - { path: ^/api/logout, roles: PUBLIC_ACCESS }
+    - { path: ^/api/public, roles: PUBLIC_ACCESS }
 
     # Interface API Platform derrière login
     - { path: ^/api$, roles: IS_AUTHENTICATED_FULLY }

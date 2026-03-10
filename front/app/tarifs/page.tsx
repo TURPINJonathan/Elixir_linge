@@ -210,7 +210,7 @@ export default function PricingPage() {
                   }`}
                 >
                   {recommended && (
-                    <div className="absolute left-1/2 top-0 -translate-x-1/2 -translate-y-1/2 rounded-full border border-[var(--text)] bg-[var(--text-light)] px-3 py-1 text-xs font-semibold text-[var(--text)] shadow-lg">
+                    <div className="absolute left-1/2 top-0 -translate-x-1/2 -translate-y-1/2 rounded-full border border-[var(--text)] bg-[var(--text-light)] px-3 py-1 text-xs font-semibold text-[var(--text)] shadow-2xl">
                       Recommandé
                     </div>
                   )}

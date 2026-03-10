@@ -15,7 +15,7 @@ export default function AboutPage() {
         <div className="mx-auto flex w-full max-w-6xl flex-row flex-wrap items-center justify-center gap-3 px-4 text-center">
           <div className="flex-1 basis-[350px]">
             <p>Ici il me faudrait ton texte</p>
-            <p>C'est une page "A propos" donc ca doit parler de toi, ton entreprise, l'adn etc</p>
+            <p>C&apos;est une page &quot;A propos&quot; donc ca doit parler de toi, ton entreprise, l&apos;adn etc</p>
           </div>
           <div className="flex-1 flex-none basis-[350px] flex justify-center items-center">
             <Image
